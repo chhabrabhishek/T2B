@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:background="@color/white">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/relative_layout">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/progress_bar"
+            android:layout_centerInParent="true"/>
+
+        <in.codeshuffle.typewriterview.TypeWriterView
+            android:id="@+id/typeWriterView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:padding="10dp"
+            android:textColor="@color/colorPrimaryLogin"
+            android:textSize="50sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/made_with_love"
+            android:layout_alignParentBottom="true"
+            android:paddingBottom="50dp"
+            android:layout_centerHorizontal="true"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/login_text"
+            android:orientation="vertical"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="150dp">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/email"
+                android:layout_margin="8dp"
+                android:padding="10dp"
+                android:textColor="@color/colorPrimaryLogin"
+                android:hint="E-Mail Id"
+                android:textColorHint="@color/colorPrimaryLogin"
+                android:visibility="gone"
+                android:maxLines="1"
+                android:inputType="textWebEmailAddress"
+                android:scrollHorizontally="true"
+                android:scrollIndicators="none"
+                android:background="@drawable/rectangle"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/password"
+                android:visibility="gone"
+                android:layout_margin="8dp"
+                android:padding="10dp"
+                android:textColor="@color/colorPrimaryLogin"
+                android:hint="Password"
+                android:textColorHint="@color/colorPrimaryLogin"
+                android:layout_below="@id/email"
+                android:maxLines="1"
+                android:inputType="textPassword"
+                android:scrollHorizontally="true"
+                android:scrollIndicators="none"
+                android:background="@drawable/rectangle"/>
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/fab"
+                android:visibility="gone"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:layout_below="@id/password"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/ic_login"
+                android:elevation="6dp"
+                android:backgroundTint="@android:color/white"/>
+
+
+        </RelativeLayout>
+
+        <in.shadowfax.proswipebutton.ProSwipeButton
+            android:id="@+id/awesome_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            app:text_color="@color/white"
+            android:layout_margin="8dp"
+            app:bg_color="@color/colorPrimaryLogin"
+            app:arrow_color="@color/white"
+            app:btn_text="Login" />
+
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "37488476108",
+    "firebase_url": "https://thoughts2binary.firebaseio.com",
+    "project_id": "thoughts2binary",
+    "storage_bucket": "thoughts2binary.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:37488476108:android:93713c617b0c6169",
+        "android_client_info": {
+          "package_name": "com.example.thoughts2binary"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "37488476108-1t719bg08fq6fcpldmnsige1v1drrslh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzm8C49Fc5IbMWtHLTEcf-pvFKilJmyvE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "37488476108-1t719bg08fq6fcpldmnsige1v1drrslh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
