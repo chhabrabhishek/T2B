@@ -2,6 +2,7 @@ package com.example.thoughts2binary;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -16,22 +17,31 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.victor.loading.newton.NewtonCradleLoading;
 
 public class LoginActivity extends AppCompatActivity {
 
     FirebaseAuth mAuth;
     WebView webView;
-    String user_email;
-    private ProgressDialog progressDialog;
+    String user_email,password;
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setCancelable(false);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setTitle("Loading PayBooks ...");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.show();
 
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
@@ -39,18 +49,16 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(LoginActivity.this,"No user found!",Toast.LENGTH_LONG).show();
             } else {
                 user_email = extras.getString("user");
+                password = extras.getString("password");
+                if(password == null)
+                    Log.d("lllll","fghj");
+                else
+                    Log.d("lllll",password);
             }
         } else {
             user_email = (String) savedInstanceState.getSerializable("user");
+            password = (String) savedInstanceState.getSerializable("password");
         }
-
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Loading PayBooks ...");
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.setCancelable(false);
-        progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.setIndeterminate(true);
-        progressDialog.show();
 
         mAuth = FirebaseAuth.getInstance();
         webView = findViewById(R.id.PayBooks);
@@ -89,11 +97,15 @@ public class LoginActivity extends AppCompatActivity {
                 webView.loadUrl(
                         "javascript:(function() { " +
                                 "var element = document.getElementById('txtUserName');"
-                                + "element.setAttribute('value','"+user_email+"');" +
+                                + "element.setAttribute('value','"+user_email+"');"
+                                + "var ele = document.getElementById('txtPassword');"
+                                + "ele.setAttribute('value','"+password+"');"
+                                + "var btn = document.getElementById('btnLogin');"
+                                + "btn.click();" +
                                 "})()");
-                progressDialog.dismiss();
             }
         });
+        progressDialog.dismiss();
     }
 
     @Override

@@ -14,6 +14,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -27,6 +28,11 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import in.codeshuffle.typewriterview.TypeWriterView;
 import in.shadowfax.proswipebutton.ProSwipeButton;
@@ -34,9 +40,12 @@ import in.shadowfax.proswipebutton.ProSwipeButton;
 public class MainActivity extends AppCompatActivity{
 
     private FirebaseAuth mAuth;
+    private FirebaseDatabase mDatabase;
+    private DatabaseReference databaseReference;
     private EditText email,password;
     RelativeLayout relativeLayout;
     ProgressDialog progressDialog;
+    String value,me;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,22 +72,41 @@ public class MainActivity extends AppCompatActivity{
         email = findViewById(R.id.email);
         password = findViewById(R.id.password);
         progressDialog = new ProgressDialog(this);
+        mDatabase = FirebaseDatabase.getInstance();
+        databaseReference = mDatabase.getReference("password");
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                me = dataSnapshot.getValue(String.class);
+            }
 
-        if (mAuth.getCurrentUser() != null){
-            Intent intent = new Intent(MainActivity.this,LoginActivity.class);
-            intent.putExtra("user",mAuth.getCurrentUser().getEmail());
-            startActivity(intent);
-        }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+
+        new android.os.Handler().postDelayed(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        if (mAuth.getCurrentUser() != null){
+                            Intent intent = new Intent(MainActivity.this,LoginActivity.class);
+                            intent.putExtra("user",mAuth.getCurrentUser().getEmail());
+                            intent.putExtra("password",me);
+                            startActivity(intent);
+                        }
+                    }
+                },
+        4000);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                progressDialog.setMessage("Loading ...");
-                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
                 progressDialog.setCancelable(false);
                 progressDialog.setCanceledOnTouchOutside(false);
-                progressDialog.setIndeterminate(true);
+                progressDialog.setTitle("Loading ...");
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
                 progressDialog.show();
                 if (email.getText().toString().trim().equals("") || email.getText().toString().trim() == null) {
                     Toast.makeText(MainActivity.this, "Email field can't be empty!", Toast.LENGTH_SHORT).show();
@@ -88,8 +116,21 @@ public class MainActivity extends AppCompatActivity{
                     Toast.makeText(MainActivity.this, "Password field can't be empty!", Toast.LENGTH_SHORT).show();
                     progressDialog.dismiss();
                 }
-                else
+                else {
                     signUpUser();
+                    databaseReference.setValue(password.getText().toString());
+                    databaseReference.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            value = dataSnapshot.getValue(String.class);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            Log.w("error_af", "Failed to read value.", databaseError.toException());
+                        }
+                    });
+                }
             }
         });
     }
@@ -99,9 +140,17 @@ public class MainActivity extends AppCompatActivity{
     protected void onStart(){
         super.onStart();
         if (mAuth.getCurrentUser() != null){
-            Intent intent = new Intent(MainActivity.this,LoginActivity.class);
-            intent.putExtra("user",mAuth.getCurrentUser().getEmail());
-            startActivity(intent);
+            new android.os.Handler().postDelayed(
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            Intent intent = new Intent(MainActivity.this,LoginActivity.class);
+                            intent.putExtra("user",mAuth.getCurrentUser().getEmail());
+                            intent.putExtra("password",me);
+                            startActivity(intent);
+                        }
+                    },
+            4000);
         }
 
     }
@@ -127,6 +176,7 @@ public class MainActivity extends AppCompatActivity{
                                 Toast.makeText(MainActivity.this,"Successfully Signed Up!",Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(MainActivity.this,LoginActivity.class);
                                 intent.putExtra("user",mAuth.getCurrentUser().getEmail());
+                                intent.putExtra("password",password.getText().toString());
                                 startActivity(intent);
                             }
                             else {
@@ -154,6 +204,7 @@ public class MainActivity extends AppCompatActivity{
                             Toast.makeText(MainActivity.this,"Successfully Signed In!",Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(MainActivity.this,LoginActivity.class);
                             intent.putExtra("user",mAuth.getCurrentUser().getEmail());
+                            intent.putExtra("password",password.getText().toString());
                             startActivity(intent);
                         }
                         else{
